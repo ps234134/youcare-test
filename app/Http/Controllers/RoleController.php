@@ -9,6 +9,13 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('role_or_permission:Rol bekijken', ['only' => ['index', 'show']]);
+        // $this->middleware('role_or_permission:Gebruiker aanmaken', ['only' => ['create', 'store']]);
+        // $this->middleware('role_or_permission:Gebruiker bewerken', ['only' => ['edit', 'update']]);
+        // $this->middleware('role_or_permission:Gebruiker verwijderen', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -42,7 +49,7 @@ class RoleController extends Controller
         $role = Role::create([
             'name' => $request->name,
         ]);
-    
+
 
         if ($request->has('permissions')) {
             foreach ($request->permissions as $permissionId) {
@@ -63,7 +70,7 @@ class RoleController extends Controller
         //         }
         //     }
         // }
-    
+
         return redirect()->route('roles.index')->with('success', 'Rol is succesvol aangemaakt.');
     }
 
@@ -75,10 +82,10 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
         $permissions = Permission::all();
-    
+
         // Haal alle permissie ID's op die aan de rol zijn toegewezen
         $rolePermissions = $role->permissions->pluck('id')->toArray();
-    
+
         return view('roles.edit', ['role' => $role, 'permissions' => $permissions, 'rolePermissions' => $rolePermissions]);
     }
 

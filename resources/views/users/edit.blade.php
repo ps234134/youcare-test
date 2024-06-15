@@ -57,12 +57,18 @@
 
             <div class="mb-4">
                 <label for="role" class="block font-bold mb-1">Rol:</label>
-                <select id="role" name="role" class="border-gray-300 rounded-md px-4 py-2 w-full">
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
-                            {{ $role->name }}</option>
-                    @endforeach
-                </select>
+                @foreach ($roles as $role)
+                <div class="flex flex-col justify-cente">
+                    <div class="flex flex-col">
+                        <label class="inline-flex items-center mt-3">
+                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600"
+                                name="roles[]" value="{{ $role->id }}"
+                                @if (count($user->roles->where('id', $role->id))) checked @endif><span
+                                class="ml-2 text-gray-700">{{ $role->name }}</span>
+                        </label>
+                    </div>
+                </div>
+            @endforeach
             </div>
 
             <button type="submit"

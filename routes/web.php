@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoosterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,10 @@ use App\Http\Controllers\RoleController;
 // });
 
 
+
+Route::get('/', function () {
+    return view('auth.login');
+})->middleware(['auth', 'verified'])->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -44,4 +49,6 @@ Route::middleware(['auth', 'role:manager||admin'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::resource('rooster', RoosterController::class);
 });
+

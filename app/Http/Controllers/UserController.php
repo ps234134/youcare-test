@@ -10,10 +10,10 @@ class UserController extends Controller
 {
     function __construct()
     {
-        $this->middleware('role_or_permission:Toegang tot Gebruiker', ['only' => ['index', 'show']]);
-        // $this->middleware('role_or_permission:Gebruiker aanmaken', ['only' => ['create', 'store']]);
-        // $this->middleware('role_or_permission:Gebruiker bewerken', ['only' => ['edit', 'update']]);
-        // $this->middleware('role_or_permission:Gebruiker verwijderen', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Gebruiker bekijken', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:Gebruiker aanmaken', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:Gebruiker bewerken', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:Gebruiker verwijderen', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -41,48 +41,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'surename' => 'nullable|string|max:255',
-        //     'phone_number' => 'nullable|string|max:255',
-        //     'address' => 'nullable|string|max:100',
-        //     'postal_code' => 'nullable|string|max:6',
-        //     'city' => 'nullable|string|max:28',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:8',
-        // ]);
-
-        // // Maak de gebruiker aan
-        // $user = User::create([
-        //     'name' => $request->name,
-        //     'surename' => $request->surename,
-        //     'phone_number' => $request->phone_number,
-        //     'address' => $request->address,
-        //     'postal_code' => $request->postal_code,
-        //     'city' => $request->city,
-        //     'email' => $request->email,
-        //     'password' => bcrypt($request->password),
-        // ]);
-        // dd($user);
-        // $role = $request->input('role');
-        // $user->assignRole($role);
-
         $request->validate([
-            'name' => $request->name,
             'name' => 'required|string|max:255',
-            'surename' => 'nullable|string|max:255',
-            'phone_number' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|digits:10',
             'address' => 'nullable|string|max:100',
             'postal_code' => 'nullable|string|max:6',
             'city' => 'nullable|string|max:28',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|confirmed'
+            'password' => 'required|string|min:8',
         ]);
-        dd($request->all());
 
+        // Maak de gebruiker aan
         $user = User::create([
             'name' => $request->name,
-            'surename' => $request->surename,
+            'surname' => $request->surename,
             'phone_number' => $request->phone_number,
             'address' => $request->address,
             'postal_code' => $request->postal_code,
@@ -90,7 +63,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
+        // dd($user);
         $roleNames = Role::whereIn('id', $request->roles)->pluck('name');
         $user->syncRoles($roleNames);
         return redirect()->route('users.index')->with('success', 'Gebruiker is succesvol aangemaakt.');
@@ -145,8 +118,8 @@ class UserController extends Controller
 
         // Wijs de geselecteerde rol toe aan de gebruiker
         $user->roles()->detach();
-        $role = $request->input('role');
-        $user->assignRole($role);
+        $roleNames = Role::whereIn('id', $request->roles)->pluck('name');
+        $user->syncRoles($roleNames);
 
         return redirect()->route('users.index')->with('success', 'Gebruiker is succesvol bijgewerkt.');
     }

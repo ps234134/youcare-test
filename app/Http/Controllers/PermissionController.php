@@ -7,6 +7,13 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('role_or_permission:Recht bekijken', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:Recht aanmaken', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:Recht bewerken', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:Recht verwijderen', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

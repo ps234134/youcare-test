@@ -4,21 +4,23 @@
         aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 text-white" style="background-color: #4CC9D1;">
             <a href="{{ route('dashboard') }}">
-                <img src="assets/img/logo_youcare.png" alt="Login Icon" style="width: 120px; height: auto;">
+                <img src="../assets/img/logo_youcare.png" alt="Login Icon" style="width: 120px; height: auto;">
                 <h1 class="text-4xl py-4 text-white">Dashboard</h1>
             </a>
             <div class="flex-col w-3/4">
 
                 <ul class="menu flex-col text-lg">
 
+                    @canany(['Rooster bekijken', 'Rooster aanmaken', 'Rooster bewerken', 'Rooster verwijderen'])
                     <li>
-                        <a href="#">
+                        <a href="{{route('rooster.index')}}">
                             <i class="fa fa-calendar inline-block mr-2"></i> Rooster
                         </a>
                     </li> <br>
+                    @endcanany
 
 
-                    @canany(['Toegang tot Gebruiker'])
+                    @canany(['Gebruiker bekijken', 'Gebruiker aanmaken', 'Gebruiker bewerken', 'Gebruiker verwijderen'])
 
                     <li>
                         <a href="{{ route('users.index') }}">
@@ -41,18 +43,21 @@
                     </li> <br> --}}
 
                     <br>
+                    @canany(['Rol bekijken', 'Rol aanmaken', 'Rol bewerken', 'Rol verwijderen'])
                     <li>
                         <a href="{{ route('roles.index') }}">
                             <i class="fa fa-cogs inline-block mr-2"></i> Rollen
                         </a>
                     </li> <br>
+                    @endcanany
 
+                    @canany(['Recht bekijken', 'Recht aanmaken', 'Recht bewerken', 'Recht verwijderen'])
                     <li>
                         <a href="{{ route('permissions.index') }}">
                             <i class="fa fa-key inline-block mr-2"></i> Rechten
                         </a>
                     </li> <br>
-
+                    @endcanany
 
                 </ul>
             </div>
